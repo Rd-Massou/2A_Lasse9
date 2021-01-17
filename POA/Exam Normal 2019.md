@@ -27,12 +27,12 @@ public class Mult implements Runnable {
         Thread main = new Thread(ss, "Main");
         Thread th1 = new Thread(ss, "Fils A");
         Thread th2 = new Thread(ss, "Fils B");
+        main.start();
         th1.start();
         th2.start();
         try {
             th1.join();
             th2.join();
-            main.start();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -70,12 +70,12 @@ public class Mult implements Runnable {
         // Précision de la priorité
         th1.setPriority(Thread.MAX_PRIORITY); 
         th2.setPriority(Thread.MIN_PRIORITY);
+        main.start();
         th1.start();
         th2.start();
         try {
             th1.join();
             th2.join();
-            main.start();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -114,6 +114,7 @@ public class Server {
             while(true){
                 LocalDateTime now = LocalDateTime.now();
                 Socket socket = server.accept();
+                // Utiliser des threads pour clients (Voir TP3 Sevrer 1 / ClientThead1)
                 PrintWriter printer = new PrintWriter(socket.getOutputStream(), true);
                 printer.println(now);
                 socket.close();
@@ -134,7 +135,7 @@ public class Client {
         System.out.println("Entrez l'adresse à consulter: ");
         String host = sc.nextLine();
         InetAddress adresse = InetAddress.getByName(hostname);
-        Socket client = new Socket(adresse, 80);
+        Socket client = new Socket(adresse, 8182);
         InputStream in = client.getInputStream();
         BufferedReader buffer = new BufferedReader(new InputStreamReader(in));
         String serverMessage = buffer.readLine();
@@ -215,7 +216,7 @@ public class Serveur {
             String host = "MonSite.com";
             InetAddress adresse = InetAddress.getByName(hostname);
             LocateRegistry.createRegistry(1099);
-            Naming.rebind("rmi://"+host+":1099/Service", svc);
+            Naming.rebind("rmi://"+adresse+":1099/Service", svc);
             System.out.println("Attente des invocations des clients ");
         } catch (Exception e) {
             System.out.println("Erreur de liaison de l'objet Compte");

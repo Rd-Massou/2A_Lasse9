@@ -55,65 +55,7 @@ public class Fourchettes {
     </ul>
 
 ```java
-public class Philosophe implements Runnable{
-    private static int idPhilo = -1;
-    private static int TempsBaseBouchee = 100; private static int TempsBoucheeMax = 500;private static int TempsMinPensee = 100;
-    private static int TempsMaxPensee = 500;
-    private int nbrBouche, tempsManger, tempsPenser, tempsDivaguer;
-    private boolean mange = false;
-    private Fourchettes froks;
-    private int[2] forkPrise;
-    public Philosophe( Fourchettes forks){
-        this.forks = forks;
-        this.idPhilo++;
-    }
-    public void manger(){
-        try{
-            TempsManger = TempsBaseBouchee + (int) Math.random()* (TempsBoucheeMax - TempsBaseBouchee);
-            forks.prendre(idPhilo);
-            forks.prendre((idPhilo+1)%forks.nombreDeFourchettes);
-            manger = true;
-            Thread.sleep(TempsManger);
-            forks.liberer(idPhilo);
-            forks.liberer((idPhilo+1)%forks.nombreDeFourchettes);
-        } catch (Exception e){
-            e.peintStackTrace();
-        }
-    }
-
-    public void penser(){
-        try{
-            tempsPenser = TempsMinPensee + (int) Math.random()* (TempsMaxPensee - TempsMinPensee);
-            Thread.sleep(tempsPenser);
-            tempsDivaguer = TempsMinPensee + (int) Math.random()* (TempsMaxPensee - TempsMinPensee);
-            Thread.sleep(tempsDivaguer);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    @Override
-    public void run(){
-        int affame = 0;
-        try{
-            while(manger == 0){
-                if(affame < 3){
-                    penser();
-                    affame++;
-                    affame%3;
-                } else {
-                    wait();
-                }
-            }
-            nbrBouche = Math.random()*10;
-            for(int i = 0; i<nbrBouche; i++){
-                manger();
-                manger = 0;
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-}
+Pas sur de la réponse ...
 ```
 
 </li>
@@ -138,7 +80,7 @@ public class Dinner {
 
 ## <span style="color:orange">Exercice 2:</span>
 On veux écrire une application client/serveur qui permet de savoir si une machine est active. Cette application utilise des sockets TCP:
-1. Ecrivez un programme Serveur qui attends une requête du client sur le port 7554 et lui envoie un proverbe (parmis une liste existante) au client, chaque fois que celui-ci s'y connecte Le serveur, le serveur doit être capable de gérer plusieurs clients simultanément.
+1. Ecrivez un programme Serveur qui attends une requête du client sur le port 7554 et lui envoie un proverbe (parmis une liste existante) au client, chaque fois que celui-ci s'y connecte Le serveur, le serveur doit être capable de gérer plusieurs clients simultanément. <span style="color:green"><strong>(Voir TP3: Server1)</strong></span>
 1. Écrivez le programme Client qui lit une adresse au clavier et envoie une requête au serveur de la machine correspondante pour savoir si elle est active. Dans l’affirmative, il affiche le message envoyé par le serveur.
 ```java
 public class Client {
@@ -147,7 +89,7 @@ public class Client {
         System.out.println("Entrez l'adresse à consulter: ");
         String host = sc.nextLine();
         InetAddress adresse = InetAddress.getByName(hostname);
-        Socket client = new Socket(adresse, 80);
+        Socket client = new Socket(adresse, 7554);
         InputStream in = client.getInputStream();
         BufferedReader buffer = new BufferedReader(new InputStreamReader(in));
         String serverMessage = buffer.readLine();
@@ -167,7 +109,7 @@ double lire_temp();
 ```
 <ol>
 <li>Quelles sonts les étapes nécessaires pour le développement d'une application distribuées avec RMI (à partir de JDK 1.5) ?
-
+<span style="color:green"><strong>(Voir Étapes 1-2-3 du lasse9)</strong></span>
 
 <li>On souhaite rendre chacune de ces méthodes accessible à distance de manière à ce qu'elles définissent l'interface **TemperatureSensorInterface** entre le client et le serveur. Ecrire cette Interface.
 
@@ -214,7 +156,7 @@ public class Serveur {
             String host = "ensias.ma";
             InetAddress adresse = InetAddress.getByName(hostname);
             LocateRegistry.createRegistry(5798);
-            Naming.rebind("rmi://"+host+":5798/serviceTemp", svc);
+            Naming.rebind("rmi://"+adresse+":5798/serviceTemp", svc);
             System.out.println("Le serveur est prêt !");
         } catch (Exception e) {
             System.out.println("Erreur de liaison de l'objet TemperatureSensor");
@@ -233,7 +175,7 @@ public class Client {
     public static void main(String[] args) throws Exception{
         String host = "ensias.ma";
         InetAddress adresse = InetAddress.getByName(hostname);
-        TemperatureSensorInterface Temp = (TemperatureSensorInterface) Naming.lookup("rmi://"+host+":5798/serviceTemp");
+        TemperatureSensorInterface Temp = (TemperatureSensorInterface) Naming.lookup("rmi://"+adresse+":5798/serviceTemp");
         System.out.println("Température actuelle: "+Temp.lire_temp());
         Temp.augmenterTemp(0.5);
         Temp.diminuerTemp(19.5);

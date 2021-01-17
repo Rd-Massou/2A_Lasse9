@@ -52,7 +52,7 @@ thread.start();
 thread.sleep(5000);
 // Le thread va s'endormir pour 5 seconds puis continuer son execution
 ```
-- <span style="color:orange"> <strong> wait() </strong> </span>: Elle permet de bloquer l'éxécution du thread (l'endormir) jusqu'a ce qu'on le réveille avec la méthode <span style="color:orange"> <strong> notify() </strong> </span> ou <span style="color:orange"> <strong> notifyAll() </strong> </span>.
+- <span style="color:orange"> <strong> wait() / wait(millisec) </strong> </span>: Elle permet de bloquer l'éxécution du thread (l'endormir) jusqu'a ce qu'on le réveille avec la méthode <span style="color:orange"> <strong> notify() </strong> </span> ou <span style="color:orange"> <strong> notifyAll() </strong> </span>.
 ```java
 class MonRunnable implements Runnable{
     //attributs
@@ -245,7 +245,7 @@ public class Server {
         LocateRegistry.createRegistry(port);
         String host = "MonSite.com";
         InetAddress adresse = InetAddress.getByName(hostname); 
-        Naming.rebind("rmi://"+host+":"+port+"/MyAlias", s);
+        Naming.rebind("rmi://"+adresse+":"+port+"/MyAlias", s);
         /* enregistrer l'objet distant dans l'enrée indiquée
         On utilise rebind au lieu de bind pour éviter AlreadyBoundException
         lorsque l'entrée existe déja.
@@ -262,7 +262,7 @@ public class Client {
         int port = 4000; // port par défault: 1099
         String host = "MonSite.com";
         InetAddress adresse = InetAddress.getByName(hostname); 
-        IMyInterface f = (IMyInterface) Naming.lookup("rmi://"+host+":"+port+"/MyAlias", s);
+        IMyInterface f = (IMyInterface) Naming.lookup("rmi://"+adresse+":"+port+"/MyAlias");
         // Utilisation :
         System.out.println("f(45) = "+f.MyMethode(45));
     }
