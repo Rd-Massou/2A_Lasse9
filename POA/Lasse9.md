@@ -72,7 +72,7 @@ class MonRunnable implements Runnable{
 Thread th1 = new Thread(), th2 = new Thread();
 th1.start();
 th2.start();
-th1.join(); // On attend que th2 termine pour continuer
+th1.join(); // On attend que th1 termine pour continuer
 ```
 - <span style="color:orange"> <strong> stop(), suspend(), resume(), destroy()</strong> </span>: Ces 4 méthodes sont des méthode deprecated ou obsolete i.e elles ne sont plus fonctionnelles donc à ne jamais utiliser.
 
