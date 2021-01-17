@@ -190,32 +190,35 @@ try{
 ```
 
 ## Proxy RMI:
-- <span style="color:green"> <strong>Étape 1</strong> </span>: Définition de l'interface de l'objet distant
+<ol> <li> <span style="color:green"> <strong>Étape 1 </span>: Définition de l'interface de l'objet distant :</strong> 
+<ul> <li> interface héritant de java.rmi.Remote </li>
+<li> Utiliser pour les méthodes : "throws java.rmi.RemoteException" </li>
+<li> paramètres de type simple, objets Sérialisables (implements Serializable) ou Distants (implements Remote)</li>
+</ul>
+
 ```java
 public interface IMyInterface extends Remote {
     public int myMethode(int param) throws RemoteException;
 }
 ```
-- <span style="color:green"> <strong>Étape 2</strong> </span>: Ecrire une implémentation de l'interface définie
+<li><span style="color:green"> <strong>Étape 2</span>: Ecrire une implémentation de l'interface définie</strong> 
+<ul>
+    <li>Classe héritant de java.rmi.server.UnicastRemoteObject et implémentant l'interface précédente.</li>
+    <li>Ecrire un main permettant l'enregistrement auprès du Naming</li>
+</ul>
+
 ```java
 public class MyClass extends UnicastRemoteObject implements IMyInterface {
-    // joue le rôle de l'object distant (ou serveur)
+    // joue le rôle de l'object distant 
+    // Attributs
     public MyClass() throws RemoteException {
         super();
     }
-
-    public static void main(String[] args) throws Exception {
-        MyClass s = new MyClass();
-        System.setProperty("java.security.policy","client.policy");
-        LocateRegistry.createRegistry(4000); // port par défault: 1099
-        Naming.rebind("rmi://localhost:4000/MyAlias", s);
-        /* enregistrer l'objet distant dans l'enrée indiquée
-        On utilise rebind au lieu de bind pour éviter AlreadyBoundException
-        lorsque l'entrée existe déja.
-        */
-        System.out.println("Le serveur est prêt");
+    /*
+    public MyClass(Args) throws RemoteException {
+        Attributs = Args
     }
-
+    */
     // Implémenter la méthode déclarée dans l'interface
     public int MyMethode(int param) throws RemoteException{
         int resultat = param**3;
@@ -223,23 +226,68 @@ public class MyClass extends UnicastRemoteObject implements IMyInterface {
     }
 }
 ```
-- <span style="color:green"> <strong>Étape 3</strong> </span>: Génération de la classe stub nécessaire au client et Ecriture du programme client
+</li>
+<li><span style="color:green"> <strong>Étape 3 </span>: Génération de la classe stub nécessaire au client et Ecriture du programme client </strong> 
+<ul>
+    <li>Utilisation du Naming pour trouver l'objet distant</li>
+    <li>appel(s) de méthodes.</li>
+</ul>
+
+**<span style="color:Orange">Class Server (stub):</span>**
+```java
+public class Server {
+    public static void main(String[] args) throws Exception {
+        /* Pour la sécurité, facultatif dans l'exam
+        System.setProperty("java.security.policy","client.policy");
+        */
+        MyClass s = new MyClass();
+        int port = 4000; // port par défault: 1099
+        LocateRegistry.createRegistry(port);
+        String host = "MonSite.com";
+        InetAddress adresse = InetAddress.getByName(hostname); 
+        Naming.rebind("rmi://"+host+":"+port+"/MyAlias", s);
+        /* enregistrer l'objet distant dans l'enrée indiquée
+        On utilise rebind au lieu de bind pour éviter AlreadyBoundException
+        lorsque l'entrée existe déja.
+        */
+        System.out.println("Le serveur est prêt");
+    }
+}
+```
+**<span style="color:Orange">Programme Client:</span>**
 ```java
 public class Client {
     public static void main(String[] args) throws Exception{
         // appel à l'objet distant:
-        IMyInterface f = (IMyInterface) Naming.lookup("rmi://127.0.0.1:4000/MyAlias");
+        int port = 4000; // port par défault: 1099
+        String host = "MonSite.com";
+        InetAddress adresse = InetAddress.getByName(hostname); 
+        IMyInterface f = (IMyInterface) Naming.lookup("rmi://"+host+":"+port+"/MyAlias", s);
         // Utilisation :
         System.out.println("f(45) = "+f.MyMethode(45));
     }
 }
 ```
-- <span style="color:green"> <strong>Étape 4</strong> </span>: Écrire le policy file
+</li>
+<li><span style="color:green"> <strong>Étape 4 </span>: Écrire le policy file (policy.file)</strong> 
+
 ```
 grant{
     permission java.net.SocketPermission
     "*:1024-65535", "connect";
 };
 ```
+</li>
+<li><span style="color:green"> <strong>Étape 5 </span>: Compilation + Lancement du Serveur + Excution du client.</strong> 
+
+```shell
+$ javac *.java
+$ start rmiregistry
+$ start java Server
+$ java –Djava.security.policy=client.policy Client
+```
+</li>
+</ol>
+
 
 # Bon courage :blush::blush:
