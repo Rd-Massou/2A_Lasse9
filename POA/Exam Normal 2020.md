@@ -150,14 +150,15 @@ public class TemperatureSensor extends UnicastRemoteObject implements  Temperatu
 import java.rmi.*;
 import java.rmi.server.*;
 import java.rmi.registry.*;
+import java.net.InetAddress;
 public class Serveur {
     public static void main(String[] args) throws Exception {
         try {
-            TemperatureSensor cpt= new TemperatureSensor(37.0);
-            String host = "ensias.ma";
+            TemperatureSensor tempSr= new TemperatureSensor(37.0);
+            String hostname = "ensias.ma";
             InetAddress adresse = InetAddress.getByName(hostname);
             LocateRegistry.createRegistry(5798);
-            Naming.rebind("rmi://"+adresse+":5798/serviceTemp", svc);
+            Naming.rebind("rmi://"+adresse+":5798/serviceTemp", tempSr);
             System.out.println("Le serveur est prêt !");
         } catch (Exception e) {
             System.out.println("Erreur de liaison de l'objet TemperatureSensor");
@@ -172,9 +173,10 @@ Le programme du client Client.java qui doit être lancé à partir d'une autre m
 
 ```java
 import java.rmi.*;
+import java.net.InetAddress;
 public class Client {
     public static void main(String[] args) throws Exception{
-        String host = "ensias.ma";
+        String hostname = "ensias.ma";
         InetAddress adresse = InetAddress.getByName(hostname);
         TemperatureSensorInterface Temp = (TemperatureSensorInterface) Naming.lookup("rmi://"+adresse+":5798/serviceTemp");
         System.out.println("Température actuelle: "+Temp.lire_temp());
