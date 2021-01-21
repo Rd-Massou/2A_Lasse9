@@ -206,6 +206,7 @@ public class Services extends UnicastRemoteObject implements IServices{
 import java.rmi.*;
 import java.rmi.server.*;
 import java.rmi.registry.*;
+import java.net.InetAddress;
 public class Serveur {
     public static void main(String[] args) throws Exception {
         try {
@@ -213,7 +214,7 @@ public class Serveur {
             Compte cpt= new Compte(2000.0);
             System.out.println("Objet Compte enregistré dans RMIregistry");
             Service svc = new Service(cpt);
-            String host = "MonSite.com";
+            String hostname = "MonSite.com";
             InetAddress adresse = InetAddress.getByName(hostname);
             LocateRegistry.createRegistry(1099);
             Naming.rebind("rmi://"+adresse+":1099/Service", svc);
