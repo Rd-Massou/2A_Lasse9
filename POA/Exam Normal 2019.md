@@ -204,7 +204,6 @@ public class Services extends UnicastRemoteObject implements IServices{
     
 ```java
 import java.rmi.*;
-import java.rmi.server.*;
 import java.rmi.registry.*;
 import java.net.InetAddress;
 public class Serveur {
