@@ -148,7 +148,6 @@ public class TemperatureSensor extends UnicastRemoteObject implements  Temperatu
 
 ```java
 import java.rmi.*;
-import java.rmi.server.*;
 import java.rmi.registry.*;
 import java.net.InetAddress;
 public class Serveur {
