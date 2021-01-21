@@ -116,9 +116,9 @@ double lire_temp();
 ```java
 import java.rmi.*;
 public interface TemperatureSensorInterface extends Remote {
-    void augmenterTemp(double tempVal) throws RemoteException;
-    void diminuerTemp(double tempVal) throws RemoteException;
-    double lire_temp() throws RemoteException;
+    public void augmenterTemp(double tempVal) throws RemoteException;
+    public void diminuerTemp(double tempVal) throws RemoteException;
+    public double lire_temp() throws RemoteException;
 }
 ```
 </li>
@@ -132,13 +132,13 @@ public class TemperatureSensor extends UnicastRemoteObject implements  Temperatu
     public TemperatureSensor(double temperature){
         this.temperature = temperature;
     }
-    void augmenterTemp(double tempVal) throws RemoteException {
+    public void augmenterTemp(double tempVal) throws RemoteException {
         temperature += tempVal;
     }
-    void diminuerTemp(double tempVal) throws RemoteException{
+    public void diminuerTemp(double tempVal) throws RemoteException{
         temperature. -= tempVal;
     }
-    double lire_temp() throws RemoteException{
+    public double lire_temp() throws RemoteException{
         return temperature;
     }
 }
