@@ -197,6 +197,7 @@ try{
 </ul>
 
 ```java
+import java.rmi.*;
 public interface IMyInterface extends Remote {
     public int myMethode(int param) throws RemoteException;
 }
@@ -208,6 +209,8 @@ public interface IMyInterface extends Remote {
 </ul>
 
 ```java
+import java.rmi.*;
+import java.rmi.server.*;
 public class MyClass extends UnicastRemoteObject implements IMyInterface {
     // joue le rôle de l'object distant 
     // Attributs
@@ -235,6 +238,9 @@ public class MyClass extends UnicastRemoteObject implements IMyInterface {
 
 **<span style="color:Orange">Class Server (stub):</span>**
 ```java
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.net.InetAddress;
 public class Server {
     public static void main(String[] args) throws Exception {
         /* Pour la sécurité, facultatif dans l'exam
@@ -243,7 +249,7 @@ public class Server {
         MyClass s = new MyClass();
         int port = 4000; // port par défault: 1099
         LocateRegistry.createRegistry(port);
-        String host = "MonSite.com";
+        String hostname = "MonSite.com";
         InetAddress adresse = InetAddress.getByName(hostname); 
         Naming.rebind("rmi://"+adresse+":"+port+"/MyAlias", s);
         /* enregistrer l'objet distant dans l'enrée indiquée
@@ -256,11 +262,13 @@ public class Server {
 ```
 **<span style="color:Orange">Programme Client:</span>**
 ```java
+import java.rmi.*;
+import java.net.InetAddress;
 public class Client {
     public static void main(String[] args) throws Exception{
         // appel à l'objet distant:
         int port = 4000; // port par défault: 1099
-        String host = "MonSite.com";
+        String hostname = "MonSite.com";
         InetAddress adresse = InetAddress.getByName(hostname); 
         IMyInterface f = (IMyInterface) Naming.lookup("rmi://"+adresse+":"+port+"/MyAlias");
         // Utilisation :
