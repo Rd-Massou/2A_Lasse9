@@ -37,7 +37,7 @@ public class Fourchettes {
             e.printStackTrace();
         }
     }
-    public void libérer(int i) { 
+    public void liberer(int i) { 
         tab[i] = 0;
     }
 }
