@@ -243,20 +243,25 @@ import java.rmi.registry.*;
 import java.net.InetAddress;
 public class Server {
     public static void main(String[] args) throws Exception {
-        /* Pour la sécurité, facultatif dans l'exam
-        System.setProperty("java.security.policy","client.policy");
-        */
-        MyClass s = new MyClass();
-        int port = 4000; // port par défault: 1099
-        LocateRegistry.createRegistry(port);
-        String hostname = "MonSite.com";
-        InetAddress adresse = InetAddress.getByName(hostname); 
-        Naming.rebind("rmi://"+adresse+":"+port+"/MyAlias", s);
-        /* enregistrer l'objet distant dans l'enrée indiquée
-        On utilise rebind au lieu de bind pour éviter AlreadyBoundException
-        lorsque l'entrée existe déja.
-        */
-        System.out.println("Le serveur est prêt");
+        try{
+            /* Pour la sécurité, facultatif dans l'exam
+            System.setProperty("java.security.policy","client.policy");
+            */
+            MyClass s = new MyClass();
+            int port = 4000; // port par défault: 1099
+            LocateRegistry.createRegistry(port);
+            String hostname = "MonSite.com";
+            InetAddress adresse = InetAddress.getByName(hostname); 
+            Naming.rebind("rmi://"+adresse+":"+port+"/MyAlias", s);
+            /* enregistrer l'objet distant dans l'enrée indiquée
+            On utilise rebind au lieu de bind pour éviter AlreadyBoundException
+            lorsque l'entrée existe déja.
+            */
+            System.out.println("Le serveur est prêt");
+        } catch (Exception e) {
+            System.out.println("Erreur de liaison de l'objet TemperatureSensor");
+            System.out.println(e.toString());
+        }
     }
 }
 ```
