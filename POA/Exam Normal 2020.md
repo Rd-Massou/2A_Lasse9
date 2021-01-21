@@ -126,7 +126,8 @@ public interface TemperatureSensorInterface extends Remote {
 
 ```java
 import java.rmi.*;
-public interface TemperatureSensor extends UnicastRemoteObject implements  TemperatureSensorInterface {
+import java.rmi.server.*;
+public class TemperatureSensor extends UnicastRemoteObject implements  TemperatureSensorInterface {
     private double temperature;
     public TemperatureSensor(double temperature){
         this.temperature = temperature;
